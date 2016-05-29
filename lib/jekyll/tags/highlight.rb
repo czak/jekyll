@@ -8,7 +8,7 @@ module Jekyll
       # forms: name, name=value, or name="<quoted list>"
       #
       # <quoted list> is a space-separated list of numbers
-      SYNTAX = /^([a-zA-Z0-9.+#-]+)((\s+\w+(=(\w+|"([0-9]+\s)*[0-9]+"))?)*)$/
+      SYNTAX = /^([a-zA-Z0-9.+#-]+)((\s+\w+(=([\w\.\/]+|"([0-9]+\s)*[0-9]+"))?)*)$/
 
       def initialize(tag_name, markup, tokens)
         super
@@ -54,7 +54,8 @@ eos
             [:hl_lines,    opts.fetch(:hl_lines, nil)],
             [:linenos,     opts.fetch(:linenos, nil)],
             [:encoding,    opts.fetch(:encoding, "utf-8")],
-            [:cssclass,    opts.fetch(:cssclass, nil)]
+            [:cssclass,    opts.fetch(:cssclass, nil)],
+            [:filename,    opts.fetch(:filename, nil)]
           ].reject { |f| f.last.nil? }]
         else
           opts
@@ -67,7 +68,7 @@ eos
         options = {}
         unless input.empty?
           # Split along 3 possible forms -- key="<quoted list>", key=value, or key
-          input.scan(/(?:\w="[^"]*"|\w=\w|\w)+/) do |opt|
+          input.scan(/(?:\w+="[^"]*"|\w+=[\w\.\/]+|\w+)/) do |opt|
             key, value = opt.split("=")
             # If a quoted list, convert to array
             if value && value.include?("\"")
@@ -127,8 +128,11 @@ eos
           "class=\"language-#{@lang.to_s.tr("+", "-")}\"",
           "data-lang=\"#{@lang}\""
         ].join(" ")
-        "<figure class=\"highlight\"><pre><code #{code_attributes}>"\
-        "#{code.chomp}</code></pre></figure>"
+
+        res = "<figure class=\"highlight\">"
+        res += "<figcaption>#{@highlight_options[:filename]}</figcaption>" if @highlight_options[:filename]
+        res += "<pre><code #{code_attributes}>#{code.chomp}</code></pre></figure>"
+        res
       end
     end
   end
