@@ -6,7 +6,7 @@ module Jekyll
     extend Forwardable
 
     attr_reader :path, :site, :extname, :collection, :type
-    attr_accessor :content, :output
+    attr_accessor :raw_content, :content, :output
 
     def_delegator :self, :read_post_data, :post_read
 

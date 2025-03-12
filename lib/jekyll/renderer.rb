@@ -80,6 +80,8 @@ module Jekyll
         output = render_liquid(output, payload, info, document.path)
       end
 
+      document.raw_content = output
+
       Jekyll.logger.debug "Rendering Markup:", document.relative_path
       output = convert(output.to_s)
       document.content = output

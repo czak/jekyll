@@ -5,7 +5,7 @@ module Jekyll
     include Convertible
 
     attr_writer :dir
-    attr_accessor :basename, :content, :data, :ext, :name, :output, :pager, :site
+    attr_accessor :basename, :raw_content, :content, :data, :ext, :name, :output, :pager, :site
 
     alias_method :extname, :ext
 
