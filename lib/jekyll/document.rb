@@ -453,6 +453,16 @@ module Jekyll
       merge_data!({ "tags" => tags })
     end
 
+    def toc
+      toc = Kramdown::Document.new(raw_content).to_toc
+      toc.children.map do |c|
+        {
+          "id" => c.attr[:id],
+          "text" => c.value.options[:raw_text],
+        }
+      end
+    end
+
     private
 
     def merge_categories!(other)
